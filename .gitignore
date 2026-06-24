@@ -31,3 +31,7 @@ replay_pid*
 # Ficheros varios
 Otros/
 AGENTS.md
+
+# Archivos de compilación comunes
+**/node_modules/
+backend/target/

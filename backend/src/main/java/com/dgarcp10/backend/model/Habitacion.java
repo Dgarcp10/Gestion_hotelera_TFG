@@ -1,0 +1,48 @@
+package com.dgarcp10.backend.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "habitacion")
+public class Habitacion {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 10)
+    private String numero;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tipo_habitacion_id", nullable = false)
+    private TipoHabitacion tipoHabitacion;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "estado_habitacion", nullable = false)
+    private EstadoHabitacion estado = EstadoHabitacion.LIBRE;
+
+    @Column(name = "pendiente_limpieza", nullable = false)
+    private Boolean pendienteLimpieza = false;
+
+    @Column(nullable = false)
+    private Boolean averiada = false;
+
+    @Column(name = "proxima_limpieza")
+    private LocalDate proximaLimpieza;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getNumero() { return numero; }
+    public void setNumero(String numero) { this.numero = numero; }
+    public TipoHabitacion getTipoHabitacion() { return tipoHabitacion; }
+    public void setTipoHabitacion(TipoHabitacion tipoHabitacion) { this.tipoHabitacion = tipoHabitacion; }
+    public EstadoHabitacion getEstado() { return estado; }
+    public void setEstado(EstadoHabitacion estado) { this.estado = estado; }
+    public Boolean getPendienteLimpieza() { return pendienteLimpieza; }
+    public void setPendienteLimpieza(Boolean pendienteLimpieza) { this.pendienteLimpieza = pendienteLimpieza; }
+    public Boolean getAveriada() { return averiada; }
+    public void setAveriada(Boolean averiada) { this.averiada = averiada; }
+    public LocalDate getProximaLimpieza() { return proximaLimpieza; }
+    public void setProximaLimpieza(LocalDate proximaLimpieza) { this.proximaLimpieza = proximaLimpieza; }
+}
