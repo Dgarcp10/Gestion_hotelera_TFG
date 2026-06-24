@@ -1,0 +1,56 @@
+package com.dgarcp10.backend.model;
+
+import jakarta.persistence.*;
+import java.time.Instant;
+
+@Entity
+@Table(name = "averia")
+public class Averia {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "habitacion_id", nullable = false)
+    private Habitacion habitacion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reportado_por", nullable = false)
+    private Usuario reportadoPor;
+
+    @Column(columnDefinition = "TEXT")
+    private String notas;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "gravedad_averia", nullable = false)
+    private GravedadAveria gravedad;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "estado_averia", nullable = false)
+    private EstadoAveria estado = EstadoAveria.ABIERTA;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bloqueo_id")
+    private BloqueoHabitacion bloqueo;
+
+    @Column(name = "creado_en", nullable = false)
+    private Instant creadoEn;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Habitacion getHabitacion() { return habitacion; }
+    public void setHabitacion(Habitacion habitacion) { this.habitacion = habitacion; }
+    public Usuario getReportadoPor() { return reportadoPor; }
+    public void setReportadoPor(Usuario reportadoPor) { this.reportadoPor = reportadoPor; }
+    public String getNotas() { return notas; }
+    public void setNotas(String notas) { this.notas = notas; }
+    public GravedadAveria getGravedad() { return gravedad; }
+    public void setGravedad(GravedadAveria gravedad) { this.gravedad = gravedad; }
+    public EstadoAveria getEstado() { return estado; }
+    public void setEstado(EstadoAveria estado) { this.estado = estado; }
+    public BloqueoHabitacion getBloqueo() { return bloqueo; }
+    public void setBloqueo(BloqueoHabitacion bloqueo) { this.bloqueo = bloqueo; }
+    public Instant getCreadoEn() { return creadoEn; }
+    public void setCreadoEn(Instant creadoEn) { this.creadoEn = creadoEn; }
+}
