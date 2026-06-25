@@ -1,7 +1,18 @@
 package com.dgarcp10.backend.model;
 
-import jakarta.persistence.*;
 import java.time.Instant;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "averia")
@@ -22,12 +33,14 @@ public class Averia {
     @Column(columnDefinition = "TEXT")
     private String notas;
 
+    // La linea comentada es para usar un tipo de columna personalizado, pero no es necesario si usamos EnumType.STRING
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "gravedad_averia", nullable = false)
+    @Column(nullable = false) // @Column(columnDefinition = "gravedad_averia", nullable = false)
     private GravedadAveria gravedad;
 
+    // La linea comentada es para usar un tipo de columna personalizado, pero no es necesario si usamos EnumType.STRING
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "estado_averia", nullable = false)
+    @Column(nullable = false) // @Column(columnDefinition = "estado_averia", nullable = false)
     private EstadoAveria estado = EstadoAveria.ABIERTA;
 
     @ManyToOne(fetch = FetchType.LAZY)
