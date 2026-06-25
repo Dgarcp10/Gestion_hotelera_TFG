@@ -1,8 +1,19 @@
 package com.dgarcp10.backend.model;
 
-import jakarta.persistence.*;
 import java.time.Instant;
 import java.time.LocalDate;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "bloqueo_habitacion")
@@ -29,8 +40,9 @@ public class BloqueoHabitacion {
     @JoinColumn(name = "creado_por", nullable = false)
     private Usuario creadoPor;
 
+    // La linea comentada es para usar un tipo de columna personalizado, pero no es necesario si usamos EnumType.STRING
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "estado_bloqueo", nullable = false)
+    @Column(nullable = false) // @Column(columnDefinition = "estado_bloqueo", nullable = false)
     private EstadoBloqueo estado = EstadoBloqueo.ACTIVO;
 
     @Column(name = "confirmado_sin_reubicacion", nullable = false)
