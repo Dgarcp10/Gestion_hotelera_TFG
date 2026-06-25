@@ -3,6 +3,7 @@ import com.dgarcp10.backend.model.Usuario;
 import com.dgarcp10.backend.repository.UsuarioRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.NoSuchElementException;
 import java.time.Instant;
 import java.util.List;
 
@@ -22,7 +23,15 @@ public class UsuarioService {
     }
     public Usuario obtenerPorId(Long id) {
         return repo.findById(id)
-            .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + id));
+            .orElseThrow(() -> new NoSuchElementException("Usuario no encontrado: " + id));
+    }
+    public Usuario obtenerPorUsername(String username) {
+        return repo.findByUsername(username)
+            .orElseThrow(() -> new NoSuchElementException("Usuario no encontrado: " + username));
+    }
+    public Usuario obtenerPorEmail(String email) {
+        return repo.findByEmail(email)
+            .orElseThrow(() -> new NoSuchElementException("Email no encontrado: " + email));
     }
     public List<Usuario> listarTodos() {
         return repo.findAll();
@@ -44,7 +53,7 @@ public class UsuarioService {
     }
     public void eliminar(Long id) {
         if (!repo.existsById(id)) {
-            throw new RuntimeException("Usuario no encontrado: " + id);
+            throw new NoSuchElementException("Usuario no encontrado: " + id);
         }
         repo.deleteById(id);
     }
