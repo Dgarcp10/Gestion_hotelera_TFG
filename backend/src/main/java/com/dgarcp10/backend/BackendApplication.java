@@ -2,8 +2,7 @@ package com.dgarcp10.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import io.github.cdimascio.dotenv.Dotenv;
 
 @SpringBootApplication
@@ -24,10 +23,5 @@ public class BackendApplication {
         // Arranca la aplicación Spring normalmente
 		SpringApplication.run(BackendApplication.class, args);
 	}
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
 }
