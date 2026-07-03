@@ -6,6 +6,7 @@ export function AuthProvider({ children }) {
     const saved = localStorage.getItem('user');
     return saved ? JSON.parse(saved) : null;
   });
+  
   const [token, setToken] = useState(() => localStorage.getItem('token'));
   const login = async (username, password) => {
     const res = await api.post('/api/auth/login', { username, password });
@@ -14,14 +15,23 @@ export function AuthProvider({ children }) {
     setToken(res.data.token);
     setUser(res.data);
   };
+
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setToken(null);
     setUser(null);
   };
+
+  const setAuth = (token, userData) => {
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(userData));
+    setToken(token);
+    setUser(userData);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, login, logout, setAuth }}>
       {children}
     </AuthContext.Provider>
   );

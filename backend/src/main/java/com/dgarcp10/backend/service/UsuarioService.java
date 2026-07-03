@@ -1,11 +1,14 @@
 package com.dgarcp10.backend.service;
-import com.dgarcp10.backend.model.Usuario;
-import com.dgarcp10.backend.repository.UsuarioRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-import java.util.NoSuchElementException;
 import java.time.Instant;
 import java.util.List;
+import java.util.NoSuchElementException;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.dgarcp10.backend.model.RolUsuario;
+import com.dgarcp10.backend.model.Usuario;
+import com.dgarcp10.backend.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
@@ -19,6 +22,8 @@ public class UsuarioService {
     public Usuario crear(Usuario usuario) {
         usuario.setPasswordHash(encoder.encode(usuario.getPasswordHash()));
         usuario.setCreadoEn(Instant.now());
+        if(usuario.getRol() == null)
+            usuario.setRol(RolUsuario.USUARIO); // Asigna un rol por defecto si no se proporciona
         return repo.save(usuario);
     }
     public Usuario obtenerPorId(Long id) {
