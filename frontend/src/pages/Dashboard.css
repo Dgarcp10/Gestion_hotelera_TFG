@@ -1,0 +1,29 @@
+.dashboard-page {
+  background: var(--beige);
+  min-height: calc(100vh - var(--header-height));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 24px 80px;
+}
+.dashboard-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 60px 48px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+.dashboard-card h1 {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+.dashboard-rol {
+  font-size: 16px;
+  color: var(--gold);
+  font-weight: 500;
+}

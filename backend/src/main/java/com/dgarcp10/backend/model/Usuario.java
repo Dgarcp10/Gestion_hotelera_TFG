@@ -45,7 +45,7 @@ public class Usuario {
     // La linea comentada es para usar un tipo de columna personalizado, pero no es necesario si usamos EnumType.STRING
     @Enumerated(EnumType.STRING)
     @Column(nullable = false) //@Column(columnDefinition = "rol_usuario", nullable = false)
-    private RolUsuario rol;
+    private RolUsuario rol = RolUsuario.USUARIO;
 
     @Column(name = "password_temporal", nullable = false)
     private Boolean passwordTemporal = false;
