@@ -42,9 +42,9 @@ public class Usuario {
     @Column(name = "avatar_path", length = 255)
     private String avatarPath;
 
-    // La linea comentada es para usar un tipo de columna personalizado, pero no es necesario si usamos EnumType.STRING
+    // La linea comentada es temporal por si da error el ci
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false) //@Column(columnDefinition = "rol_usuario", nullable = false)
+    @Column(columnDefinition = "rol_usuario", nullable = false) // @Column(nullable = false)
     private RolUsuario rol = RolUsuario.USUARIO;
 
     @Column(name = "password_temporal", nullable = false)

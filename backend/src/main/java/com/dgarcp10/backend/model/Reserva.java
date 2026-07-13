@@ -48,9 +48,9 @@ public class Reserva {
     @Column(name = "importe_cobrado", nullable = false, precision = 10, scale = 2)
     private BigDecimal importeCobrado;
 
-    // La linea comentada es para usar un tipo de columna personalizado, pero no es necesario si usamos EnumType.STRING
+    // La linea comentada es temporal por si da error el ci
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false) // @Column(columnDefinition = "estado_reserva", nullable = false)
+    @Column(columnDefinition = "estado_reserva", nullable = false) // @Column(nullable = false)
     private EstadoReserva estado = EstadoReserva.PENDIENTE;
 
     @Column(name = "creado_en", nullable = false)

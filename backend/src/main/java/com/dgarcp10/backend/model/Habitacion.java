@@ -29,9 +29,9 @@ public class Habitacion {
     @JoinColumn(name = "tipo_habitacion_id", nullable = false)
     private TipoHabitacion tipoHabitacion;
 
-    // La linea comentada es para usar un tipo de columna personalizado, pero no es necesario si usamos EnumType.STRING
+    // La linea comentada es temporal por si da error el ci
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false) // @Column(columnDefinition = "estado_habitacion", nullable = false)
+    @Column(columnDefinition = "estado_habitacion", nullable = false) // @Column(nullable = false)
     private EstadoHabitacion estado = EstadoHabitacion.LIBRE;
 
     @Column(name = "pendiente_limpieza", nullable = false)
