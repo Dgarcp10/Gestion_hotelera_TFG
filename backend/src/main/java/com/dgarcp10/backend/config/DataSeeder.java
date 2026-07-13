@@ -3,6 +3,7 @@ import java.time.Instant;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +11,7 @@ import com.dgarcp10.backend.model.RolUsuario;
 import com.dgarcp10.backend.model.Usuario;
 import com.dgarcp10.backend.repository.UsuarioRepository;
 @Component
+@Profile("!test")
 public class DataSeeder implements CommandLineRunner {
     private final UsuarioRepository repo;
     private final BCryptPasswordEncoder encoder;
