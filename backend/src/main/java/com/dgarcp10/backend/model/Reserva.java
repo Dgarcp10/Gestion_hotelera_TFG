@@ -48,9 +48,8 @@ public class Reserva {
     @Column(name = "importe_cobrado", nullable = false, precision = 10, scale = 2)
     private BigDecimal importeCobrado;
 
-    // La linea comentada es temporal por si da error el ci
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "estado_reserva", nullable = false) // @Column(nullable = false)
+    @Column(nullable = false)
     private EstadoReserva estado = EstadoReserva.PENDIENTE;
 
     @Column(name = "creado_en", nullable = false)

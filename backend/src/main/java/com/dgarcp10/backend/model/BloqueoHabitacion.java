@@ -40,9 +40,8 @@ public class BloqueoHabitacion {
     @JoinColumn(name = "creado_por", nullable = false)
     private Usuario creadoPor;
 
-    // La linea comentada es temporal por si da error el ci
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "estado_bloqueo", nullable = false) // @Column(nullable = false)
+    @Column(nullable = false)
     private EstadoBloqueo estado = EstadoBloqueo.ACTIVO;
 
     @Column(name = "confirmado_sin_reubicacion", nullable = false)

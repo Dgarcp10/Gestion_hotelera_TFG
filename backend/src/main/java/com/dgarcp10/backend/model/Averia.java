@@ -33,14 +33,12 @@ public class Averia {
     @Column(columnDefinition = "TEXT")
     private String notas;
 
-    // La linea comentada es temporal por si da error el ci
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "gravedad_averia", nullable = false) // @Column(nullable = false) 
+    @Column(nullable = false) 
     private GravedadAveria gravedad;
 
-    // La linea comentada es temporal por si da error el ci
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "estado_averia", nullable = false) // @Column(nullable = false) 
+    @Column(nullable = false) 
     private EstadoAveria estado = EstadoAveria.ABIERTA;
 
     @ManyToOne(fetch = FetchType.LAZY)
