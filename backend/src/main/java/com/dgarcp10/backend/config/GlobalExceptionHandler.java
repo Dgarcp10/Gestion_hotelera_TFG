@@ -24,8 +24,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(Map.of("error", ex.getMessage()));
     }
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, String>> handleGeneral() {
+    public ResponseEntity<Map<String, String>> handleGeneral(Exception ex) {
+        log.error("Error interno del servidor", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(Map.of("error", "Error interno del servidor"));
     }

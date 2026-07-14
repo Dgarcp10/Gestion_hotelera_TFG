@@ -1,0 +1,263 @@
+.jefe-nav {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: var(--dark);
+  display: flex;
+  align-items: center;
+  padding: 0 60px;
+  gap: 4px;
+  z-index: 999;
+}
+.jefe-nav-link {
+  color: rgba(255, 255, 255, 0.65);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px 20px;
+  border-radius: 6px;
+  transition: all var(--transition);
+  text-decoration: none;
+}
+.jefe-nav-link:hover {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.1);
+}
+.jefe-nav-link.active {
+  color: var(--gold);
+  background: rgba(200, 161, 90, 0.12);
+}
+/* ---- Página de habitaciones ---- */
+.habitaciones-page {
+  background: var(--beige);
+  min-height: calc(100vh - var(--header-height));
+  padding-top: calc(var(--header-height) + 48px);
+}
+.habitaciones-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+.habitaciones-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+.habitaciones-header h1 {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--dark);
+}
+.btn-crear {
+  background: var(--gold);
+  color: var(--white);
+  border: none;
+  padding: 12px 28px;
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.btn-crear:hover {
+  background: var(--gold-hover);
+}
+.habitaciones-table-wrapper {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: var(--shadow-subtle);
+  overflow: hidden;
+}
+.habitaciones-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.habitaciones-table th {
+  background: var(--beige);
+  color: var(--text-body);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 16px 20px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+}
+.habitaciones-table td {
+  padding: 14px 20px;
+  font-size: 14px;
+  color: var(--dark);
+  border-bottom: 1px solid var(--border-light);
+}
+.habitaciones-table tbody tr:hover {
+  background: #faf9f6;
+}
+.habitaciones-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.table-empty {
+  text-align: center;
+  color: var(--text-body);
+  padding: 40px 20px !important;
+}
+.estado-tag {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.tag-libre {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+.tag-ocupada {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+.tag-bloqueada {
+  background: #fce4ec;
+  color: #c62828;
+}
+.acciones-cell {
+  display: flex;
+  gap: 8px;
+}
+.btn-accion {
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all var(--transition);
+}
+.btn-editar {
+  background: transparent;
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.btn-editar:hover {
+  background: var(--gold);
+  color: var(--white);
+}
+.btn-eliminar {
+  background: transparent;
+  border-color: #e57373;
+  color: #e57373;
+}
+.btn-eliminar:hover {
+  background: #e57373;
+  color: var(--white);
+}
+/* ---- Modal ---- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 24px;
+}
+.modal-content {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 40px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+}
+.modal-content h2 {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--dark);
+  margin-bottom: 24px;
+}
+.form-group {
+  margin-bottom: 18px;
+}
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-body);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border-light);
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--dark);
+  background: var(--white);
+  transition: border-color var(--transition);
+}
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+  font-size: 14px;
+  cursor: pointer;
+}
+.checkbox-group input[type="checkbox"] {
+  width: auto;
+  accent-color: var(--gold);
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 28px;
+}
+.btn-cancelar {
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border-light);
+  background: transparent;
+  color: var(--text-body);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.btn-cancelar:hover {
+  border-color: var(--text-body);
+}
+.btn-guardar {
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: none;
+  background: var(--gold);
+  color: var(--white);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.btn-guardar:hover {
+  background: var(--gold-hover);
+}

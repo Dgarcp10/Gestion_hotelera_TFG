@@ -42,9 +42,8 @@ public class Usuario {
     @Column(name = "avatar_path", length = 255)
     private String avatarPath;
 
-    // La linea comentada es temporal por si da error el ci
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "rol_usuario", nullable = false) // @Column(nullable = false)
+    @Column(nullable = false)
     private RolUsuario rol = RolUsuario.USUARIO;
 
     @Column(name = "password_temporal", nullable = false)
