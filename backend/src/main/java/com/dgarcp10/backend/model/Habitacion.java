@@ -23,7 +23,7 @@ public class Habitacion {
     private Long id;
 
     @Column(nullable = false, unique = true, length = 10)
-    private String numero;
+    private Integer numero;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tipo_habitacion_id", nullable = false)
@@ -45,8 +45,8 @@ public class Habitacion {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public String getNumero() { return numero; }
-    public void setNumero(String numero) { this.numero = numero; }
+    public Integer getNumero() { return numero; }
+    public void setNumero(Integer numero) { this.numero = numero; }
     public TipoHabitacion getTipoHabitacion() { return tipoHabitacion; }
     public void setTipoHabitacion(TipoHabitacion tipoHabitacion) { this.tipoHabitacion = tipoHabitacion; }
     public EstadoHabitacion getEstado() { return estado; }

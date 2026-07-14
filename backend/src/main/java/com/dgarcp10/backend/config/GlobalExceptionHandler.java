@@ -19,6 +19,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(Map.of("error", "El valor ya existe en la base de datos"));
     }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleBadRequest(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(Map.of("error", ex.getMessage()));
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGeneral() {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
