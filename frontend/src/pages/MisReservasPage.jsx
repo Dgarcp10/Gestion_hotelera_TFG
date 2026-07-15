@@ -36,7 +36,7 @@ export default function MisReservasPage() {
         <div className="mis-reservas-container">
           <div className="mis-reservas-header">
             <h1>Mis reservas</h1>
-            <button className="btn-crear">+ Nueva reserva</button>
+            <button className="btn-crear" onClick={() => navigate('/nueva-reserva')}>+ Nueva reserva</button>
           </div>
           <div className="habitaciones-table-wrapper">
             <table className="habitaciones-table">
