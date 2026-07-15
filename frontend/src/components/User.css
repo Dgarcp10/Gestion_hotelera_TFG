@@ -1,0 +1,71 @@
+.user-nav {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: var(--dark);
+  display: flex;
+  align-items: center;
+  padding: 0 60px;
+  gap: 4px;
+  z-index: 999;
+}
+.user-nav-link {
+  color: rgba(255, 255, 255, 0.65);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px 20px;
+  border-radius: 6px;
+  transition: all var(--transition);
+  text-decoration: none;
+}
+.user-nav-link:hover {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.1);
+}
+.user-nav-link.active {
+  color: var(--gold);
+  background: rgba(200, 161, 90, 0.12);
+}
+/* ---- Página de mis reservas ---- */
+.mis-reservas-page {
+  background: var(--beige);
+  min-height: calc(100vh - var(--header-height));
+  padding-top: calc(var(--header-height) + 48px);
+}
+.mis-reservas-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+.mis-reservas-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+.mis-reservas-header h1 {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--dark);
+}
+/* estado tags para reservas */
+.tag-pendiente {
+  background: #fff3e0;
+  color: #e65100;
+}
+.tag-en_curso {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+.tag-finalizada {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+.tag-cancelada {
+  background: #fce4ec;
+  color: #c62828;
+}

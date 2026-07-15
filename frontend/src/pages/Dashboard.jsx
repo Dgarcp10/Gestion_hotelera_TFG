@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import ProtectedHeader from '../components/ProtectedHeader';
 import JefeNav from '../components/JefeNav';
+import UserNav from '../components/UserNav';
 import Footer from '../components/Footer';
 import './Dashboard.css';
 export default function Dashboard() {
@@ -24,6 +25,7 @@ export default function Dashboard() {
       <ProtectedHeader />
       <main className="dashboard-page">
         {user?.rol === 'JEFE' && <JefeNav />}
+        {user?.rol === 'USUARIO' && <UserNav />}
         <div className="dashboard-card">
           <h1>Bienvenido, {user.username}</h1>
           <p className="dashboard-rol">{rolMap[user.rol] || user.rol}</p>
