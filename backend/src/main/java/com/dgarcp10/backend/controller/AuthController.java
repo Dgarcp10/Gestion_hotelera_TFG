@@ -68,6 +68,10 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Map.of("error", "El usuario ya existe"));
         }
+        if (repo.findByEmail(body.get("email")).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", "El correo ya fue registrado"));
+        }
         Usuario usuario = new Usuario();
         usuario.setUsername(body.get("username"));
         usuario.setEmail(body.get("email"));
