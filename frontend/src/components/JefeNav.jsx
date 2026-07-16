@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import './Jefe.css';
 const links = [
   { to: '/jefe/habitaciones', label: 'Habitaciones' },
+  { to: '/jefe/empleados', label: 'Empleados' },
 ];
 export default function JefeNav() {
   const location = useLocation();
