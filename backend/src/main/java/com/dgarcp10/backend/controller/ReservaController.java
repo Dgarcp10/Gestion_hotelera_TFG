@@ -40,6 +40,11 @@ public class ReservaController {
         Long usuarioId = obtenerUsuarioId(auth);
         return reservaService.misReservas(usuarioId);
     }
+    @GetMapping("/pendientes")
+    @PreAuthorize("hasAnyRole('JEFE', 'RECEPCION')")
+    public List<Reserva> pendientes() {
+        return reservaService.reservasPendientes();
+    }
     @GetMapping("/{id}")
     public Reserva obtener(@PathVariable Long id) {
         return reservaService.obtenerReserva(id);

@@ -106,4 +106,8 @@ public class ReservaService {
         reserva.setEstado(EstadoReserva.FINALIZADA);
         return reservaRepo.save(reserva);
     }
+    public List<Reserva> reservasPendientes() {
+    return reservaRepo.findByEstadoAndFechaEntradaLessThanEqualOrderByCreadoEnDesc(
+        EstadoReserva.PENDIENTE, LocalDate.now());
+}
 }
