@@ -106,7 +106,11 @@ public class ReservaService {
         return reservaRepo.save(reserva);
     }
     public List<Reserva> reservasPendientes() {
-    return reservaRepo.findByEstadoAndFechaEntradaLessThanEqualOrderByCreadoEnDesc(
-        EstadoReserva.PENDIENTE, LocalDate.now());
-}
+        return reservaRepo.findByEstadoAndFechaEntradaLessThanEqualOrderByCreadoEnDesc(
+            EstadoReserva.PENDIENTE, LocalDate.now());
+    }
+    public List<Reserva> estanciasParaCheckOut() {
+        return reservaRepo.findByEstadoAndFechaSalidaLessThanEqualOrderByFechaEntradaAsc(
+            EstadoReserva.EN_CURSO, LocalDate.now());
+    }
 }

@@ -21,4 +21,6 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     List<Reserva> findByEstadoAndFechaEntradaLessThanEqualOrderByCreadoEnDesc(
            EstadoReserva estado, LocalDate fecha);
+    List<Reserva> findByEstadoAndFechaSalidaLessThanEqualOrderByFechaEntradaAsc(
+           EstadoReserva estado, LocalDate fecha);
 }

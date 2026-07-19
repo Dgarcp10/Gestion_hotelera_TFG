@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import './Recepcion.css';
 const links = [
   { to: '/recepcion/check-in', label: 'Check-in' },
+  { to: '/recepcion/check-out', label: 'Check-out' },
 ];
 export default function RecepcionNav() {
   const location = useLocation();

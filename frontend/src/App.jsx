@@ -8,6 +8,7 @@ import MisReservasPage from './pages/MisReservasPage';
 import NuevaReservaPage from './pages/NuevaReservaPage';
 import GestionEmpleadosPage from './pages/GestionEmpleadosPage';
 import CheckInPage from './pages/CheckInPage';
+import CheckOutPage from './pages/CheckOutPage';
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
       <Route path="/nueva-reserva" element={<NuevaReservaPage />} />
       <Route path="/jefe/empleados" element={<GestionEmpleadosPage />} />
       <Route path="/recepcion/check-in" element={<CheckInPage />} />
+      <Route path="/recepcion/check-out" element={<CheckOutPage />} />
       
     </Routes>
   );

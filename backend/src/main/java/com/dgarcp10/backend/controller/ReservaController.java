@@ -45,6 +45,11 @@ public class ReservaController {
     public List<Reserva> pendientes() {
         return reservaService.reservasPendientes();
     }
+    @GetMapping("/para-checkout")
+    @PreAuthorize("hasAnyRole('JEFE', 'RECEPCION')")
+    public List<Reserva> paraCheckOut() {
+        return reservaService.estanciasParaCheckOut();
+    }
     @GetMapping("/{id}")
     public Reserva obtener(@PathVariable Long id) {
         return reservaService.obtenerReserva(id);
