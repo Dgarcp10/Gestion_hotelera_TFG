@@ -1,0 +1,84 @@
+.recepcion-nav {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: var(--dark);
+  display: flex;
+  align-items: center;
+  padding: 0 60px;
+  gap: 4px;
+  z-index: 999;
+}
+.recepcion-nav-link {
+  color: rgba(255, 255, 255, 0.65);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px 20px;
+  border-radius: 6px;
+  transition: all var(--transition);
+  text-decoration: none;
+}
+.recepcion-nav-link:hover {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.1);
+}
+.recepcion-nav-link.active {
+  color: var(--gold);
+  background: rgba(200, 161, 90, 0.12);
+}
+/* ---- Página de check-in ---- */
+.checkin-page {
+  background: var(--beige);
+  min-height: calc(100vh - var(--header-height));
+  padding-top: calc(var(--header-height) + 48px);
+}
+.checkin-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+.checkin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+.checkin-header h1 {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--dark);
+}
+.checkin-buscador {
+  width: 100%;
+  max-width: 320px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border-light);
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--dark);
+  background: var(--white);
+  transition: border-color var(--transition);
+}
+.checkin-buscador:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+.checkin-accion {
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all var(--transition);
+  background: var(--gold);
+  color: var(--white);
+}
+.checkin-accion:hover {
+  background: var(--gold-hover);
+}

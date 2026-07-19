@@ -81,7 +81,6 @@ public class ReservaService {
         Habitacion habitacion = habitacionRepo.findByTipoHabitacionId(reserva.getTipoHabitacion().getId())
             .stream()
             .filter(h -> h.getEstado() == EstadoHabitacion.LIBRE
-                      && !h.getAveriada()
                       && !h.getPendienteLimpieza())
             .findFirst()
             .orElseThrow(() -> new IllegalStateException("No hay habitaciones libres disponibles"));
@@ -106,4 +105,8 @@ public class ReservaService {
         reserva.setEstado(EstadoReserva.FINALIZADA);
         return reservaRepo.save(reserva);
     }
+    public List<Reserva> reservasPendientes() {
+    return reservaRepo.findByEstadoAndFechaEntradaLessThanEqualOrderByCreadoEnDesc(
+        EstadoReserva.PENDIENTE, LocalDate.now());
+}
 }

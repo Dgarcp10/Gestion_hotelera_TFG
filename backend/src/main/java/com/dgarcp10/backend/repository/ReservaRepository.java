@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.dgarcp10.backend.model.EstadoReserva;
 import com.dgarcp10.backend.model.Reserva;
 public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     List<Reserva> findByUsuarioIdOrderByCreadoEnDesc(Long usuarioId);
@@ -17,4 +18,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     long countReservasActivasEnRango(@Param("tipoId") Long tipoId,
                                      @Param("entrada") LocalDate entrada,
                                      @Param("salida") LocalDate salida);
+
+    List<Reserva> findByEstadoAndFechaEntradaLessThanEqualOrderByCreadoEnDesc(
+           EstadoReserva estado, LocalDate fecha);
 }
