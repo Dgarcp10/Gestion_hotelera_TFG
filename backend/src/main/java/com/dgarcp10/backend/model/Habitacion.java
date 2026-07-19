@@ -31,7 +31,7 @@ public class Habitacion {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EstadoHabitacion estado = EstadoHabitacion.LIBRE;
+    private EstadoHabitacion estado; // = EstadoHabitacion.LIBRE;
 
     @Column(name = "pendiente_limpieza", nullable = false)
     private Boolean pendienteLimpieza = false;
