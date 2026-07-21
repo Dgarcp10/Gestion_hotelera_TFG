@@ -3,6 +3,9 @@ import './Jefe.css';
 const links = [
   { to: '/jefe/habitaciones', label: 'Habitaciones' },
   { to: '/jefe/empleados', label: 'Empleados' },
+  { to: '/recepcion/check-in', label: 'Check-in' },
+  { to: '/recepcion/check-out', label: 'Check-out' },
+  { to: '/limpieza', label: 'Limpieza' },
 ];
 export default function JefeNav() {
   const location = useLocation();

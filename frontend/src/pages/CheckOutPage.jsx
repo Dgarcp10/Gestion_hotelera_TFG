@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/useAuth';
 import api from '../services/api';
 import ProtectedHeader from '../components/ProtectedHeader';
 import RecepcionNav from '../components/RecepcionNav';
+import JefeNav from '../components/JefeNav';
 import Footer from '../components/Footer';
 import '../components/Jefe.css';
 import '../components/Recepcion.css';
@@ -41,7 +42,8 @@ export default function CheckOutPage() {
     <>
       <ProtectedHeader />
       <main className="checkin-page">
-        {user?.rol === 'RECEPCION' && <RecepcionNav />}
+        {(user?.rol === 'RECEPCION' && <RecepcionNav />) ||
+          (user?.rol === 'JEFE' && <JefeNav />)}
         <div className="checkin-container">
           <div className="checkin-header">
             <h1>Check-out</h1>

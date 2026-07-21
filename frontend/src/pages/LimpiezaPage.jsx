@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/useAuth';
 import api from '../services/api';
 import ProtectedHeader from '../components/ProtectedHeader';
 import LimpiezaNav from '../components/LimpiezaNav';
+import JefeNav from '../components/JefeNav';
 import Footer from '../components/Footer';
 import '../components/Jefe.css';
 import '../components/Limpieza.css';
@@ -68,7 +69,8 @@ export default function LimpiezaPage() {
     <>
       <ProtectedHeader />
       <main className="limpieza-page">
-        {user?.rol === 'LIMPIEZA' && <LimpiezaNav />}
+        {(user?.rol === 'LIMPIEZA' && <LimpiezaNav />) ||
+        (user?.rol === 'JEFE' && <JefeNav />)}
         <div className="limpieza-container">
           <div className="limpieza-header">
             <h1>Limpieza</h1>
