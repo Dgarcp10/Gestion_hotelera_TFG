@@ -60,7 +60,7 @@ export default function LimpiezaPage() {
   };
   const motivoLabel = (tipo) => {
     if (tipo === 'CHECKOUT') return 'Post-checkout';
-    if (tipo === 'REPASO_ESTANCIA') return 'Repaso';
+    if (tipo === 'REPASO_ESTANCIA') return 'Limpieza de estancia';
     return 'Repaso';
   };
   if (!user) return null;

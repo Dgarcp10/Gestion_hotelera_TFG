@@ -48,7 +48,7 @@ public class LimpiezaService {
             throw new IllegalStateException("La habitación ya tiene una tarea de limpieza pendiente");
         }
         TipoTareaLimpieza tipo = switch (habitacion.getEstado()) {
-            case LIBRE -> TipoTareaLimpieza.CHECKOUT;
+            case LIBRE -> TipoTareaLimpieza.REPASO_VACIA;
             case OCUPADA -> TipoTareaLimpieza.REPASO_ESTANCIA;
             case BLOQUEADA -> TipoTareaLimpieza.REPASO_VACIA;
         };
@@ -102,11 +102,16 @@ public class LimpiezaService {
             if (tareaRepo.findByHabitacionIdAndCompletadaEnIsNull(h.getId()).isPresent()) {
                 continue;
             }
-            TipoTareaLimpieza tipo = switch (h.getEstado()) {
-                case LIBRE -> TipoTareaLimpieza.CHECKOUT;
-                case OCUPADA -> TipoTareaLimpieza.REPASO_ESTANCIA;
-                case BLOQUEADA -> TipoTareaLimpieza.REPASO_VACIA;
-            };
+            TipoTareaLimpieza tipo;
+            if (h.getPendienteLimpieza()) {
+                tipo = h.getEstado() == EstadoHabitacion.OCUPADA
+                    ? TipoTareaLimpieza.REPASO_ESTANCIA
+                    : TipoTareaLimpieza.CHECKOUT;
+            } else {
+                tipo = h.getEstado() == EstadoHabitacion.OCUPADA
+                    ? TipoTareaLimpieza.REPASO_ESTANCIA
+                    : TipoTareaLimpieza.REPASO_VACIA;
+            }
             TareaLimpieza tarea = new TareaLimpieza();
             tarea.setHabitacion(h);
             tarea.setTipo(tipo);
