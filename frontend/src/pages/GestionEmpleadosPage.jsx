@@ -61,10 +61,10 @@ export default function GestionEmpleadosPage() {
                 </tr>
               </thead>
               <tbody>
-                {usuarios.length === 0 && (
+                {usuarios.filter(u => u.rol !== 'USUARIO').length === 0 && (
                   <tr><td colSpan="5" className="table-empty">No hay usuarios registrados</td></tr>
                 )}
-                {usuarios.map((u) => (
+                {usuarios.filter(u => u.rol !== 'USUARIO').map((u) => (
                   <tr key={u.id}>
                     <td>{u.username}</td>
                     <td>{u.nombre} {u.apellido}</td>
