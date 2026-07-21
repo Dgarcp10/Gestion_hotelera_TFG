@@ -1,4 +1,5 @@
 package com.dgarcp10.backend.repository;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,4 +10,6 @@ public interface HabitacionRepository extends JpaRepository<Habitacion, Long> {
     Optional<Habitacion> findByNumero(Integer numero);
     Long countByTipoHabitacionId(Long tipoHabitacionId);
     List<Habitacion> findByTipoHabitacionId(Long tipoHabitacionId);
+    List<Habitacion> findByPendienteLimpiezaTrueOrProximaLimpiezaLessThanEqual(LocalDate fecha);
+List<Habitacion> findByProximaLimpieza(LocalDate fecha);
 }

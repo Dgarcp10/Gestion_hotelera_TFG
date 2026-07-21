@@ -1,6 +1,7 @@
 package com.dgarcp10.backend.repository;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +24,5 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
            EstadoReserva estado, LocalDate fecha);
     List<Reserva> findByEstadoAndFechaSalidaLessThanEqualOrderByFechaEntradaAsc(
            EstadoReserva estado, LocalDate fecha);
+    Optional<Reserva> findByHabitacionIdAndEstado(Long habitacionId, EstadoReserva estado);
 }
