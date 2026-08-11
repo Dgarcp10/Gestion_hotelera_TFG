@@ -13,26 +13,33 @@ import com.dgarcp10.backend.model.EstadoHabitacion;
 import com.dgarcp10.backend.model.EstadoReserva;
 import com.dgarcp10.backend.model.Habitacion;
 import com.dgarcp10.backend.model.Reserva;
+import com.dgarcp10.backend.model.TareaLimpieza;
 import com.dgarcp10.backend.model.TipoHabitacion;
+import com.dgarcp10.backend.model.TipoTareaLimpieza;
 import com.dgarcp10.backend.model.Usuario;
 import com.dgarcp10.backend.repository.HabitacionRepository;
 import com.dgarcp10.backend.repository.ReservaRepository;
+import com.dgarcp10.backend.repository.TareaLimpiezaRepository;
 import com.dgarcp10.backend.repository.TipoHabitacionRepository;
 import com.dgarcp10.backend.repository.UsuarioRepository;
+
 @Service
 public class ReservaService {
     private final ReservaRepository reservaRepo;
     private final UsuarioRepository usuarioRepo;
     private final TipoHabitacionRepository tipoHabitacionRepo;
     private final HabitacionRepository habitacionRepo;
+    private final TareaLimpiezaRepository tareaLimpiezaRepo;
     public ReservaService(ReservaRepository reservaRepo,
                           UsuarioRepository usuarioRepo,
                           TipoHabitacionRepository tipoHabitacionRepo,
-                          HabitacionRepository habitacionRepo) {
+                          HabitacionRepository habitacionRepo,
+                          TareaLimpiezaRepository tareaLimpiezaRepo) {
         this.reservaRepo = reservaRepo;
         this.usuarioRepo = usuarioRepo;
         this.tipoHabitacionRepo = tipoHabitacionRepo;
         this.habitacionRepo = habitacionRepo;
+        this.tareaLimpiezaRepo = tareaLimpiezaRepo;
     }
     public List<Reserva> misReservas(Long usuarioId) {
         return reservaRepo.findByUsuarioIdOrderByCreadoEnDesc(usuarioId);
@@ -85,6 +92,10 @@ public class ReservaService {
             .findFirst()
             .orElseThrow(() -> new IllegalStateException("No hay habitaciones libres disponibles"));
         habitacion.setEstado(EstadoHabitacion.OCUPADA);
+        habitacion.setProximaLimpieza(
+            reserva.getFechaSalida().isAfter(LocalDate.now().plusDays(1))
+                ? LocalDate.now().plusDays(1)
+                : null);
         habitacionRepo.save(habitacion);
         reserva.setHabitacion(habitacion);
         reserva.setEstado(EstadoReserva.EN_CURSO);
@@ -100,6 +111,14 @@ public class ReservaService {
         if (habitacion != null) {
             habitacion.setEstado(EstadoHabitacion.LIBRE);
             habitacion.setPendienteLimpieza(true);
+            if (tareaLimpiezaRepo.findByHabitacionIdAndCompletadaEnIsNull(habitacion.getId()).isEmpty()) {
+                TareaLimpieza tarea = new TareaLimpieza();
+                tarea.setHabitacion(habitacion);
+                tarea.setTipo(TipoTareaLimpieza.CHECKOUT);
+                tarea.setAccionable(true);
+                tarea.setCreadoEn(Instant.now());
+                tareaLimpiezaRepo.save(tarea);
+            }
             habitacionRepo.save(habitacion);
         }
         reserva.setEstado(EstadoReserva.FINALIZADA);

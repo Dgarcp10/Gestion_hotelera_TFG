@@ -1,7 +1,6 @@
 package com.dgarcp10.backend.service;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -34,11 +33,8 @@ public class LimpiezaService {
         this.reservaRepo = reservaRepo;
         this.usuarioRepo = usuarioRepo;
     }
-    public List<TareaLimpieza> tareasPendientes() {
-        return tareaRepo.findByCompletadaEnIsNullOrderByCreadoEnDesc();
-    }
-    public List<Habitacion> previstasManana() {
-        return habitacionRepo.findByProximaLimpieza(LocalDate.now().plusDays(1));
+    public List<Habitacion> habitacionesParaLimpiar() {
+        return habitacionRepo.findHabitacionesParaLimpiar(LocalDate.now());
     }
     @Transactional
     public void programarLimpieza(Integer numeroHabitacion) {
@@ -47,14 +43,9 @@ public class LimpiezaService {
         if (tareaRepo.findByHabitacionIdAndCompletadaEnIsNull(habitacion.getId()).isPresent()) {
             throw new IllegalStateException("La habitación ya tiene una tarea de limpieza pendiente");
         }
-        TipoTareaLimpieza tipo = switch (habitacion.getEstado()) {
-            case LIBRE -> TipoTareaLimpieza.REPASO_VACIA;
-            case OCUPADA -> TipoTareaLimpieza.REPASO_ESTANCIA;
-            case BLOQUEADA -> TipoTareaLimpieza.REPASO_VACIA;
-        };
         TareaLimpieza tarea = new TareaLimpieza();
         tarea.setHabitacion(habitacion);
-        tarea.setTipo(tipo);
+        tarea.setTipo(TipoTareaLimpieza.REPASO_VACIA);
         tarea.setAccionable(true);
         tarea.setCreadoEn(Instant.now());
         habitacion.setPendienteLimpieza(true);
@@ -62,6 +53,23 @@ public class LimpiezaService {
         tareaRepo.save(tarea);
         habitacionRepo.save(habitacion);
     }
+    @Transactional
+        public void crearTareaPendiente(Habitacion habitacion) {
+            if (!Boolean.TRUE.equals(habitacion.getPendienteLimpieza())) {
+                return;
+            }
+            if (tareaRepo.findByHabitacionIdAndCompletadaEnIsNull(habitacion.getId()).isPresent()) {
+                return;
+            }
+            TareaLimpieza tarea = new TareaLimpieza();
+            tarea.setHabitacion(habitacion);
+            tarea.setTipo(TipoTareaLimpieza.REPASO_VACIA);
+            tarea.setAccionable(true);
+            tarea.setCreadoEn(Instant.now());
+            habitacion.setProximaLimpieza(null);
+            tareaRepo.save(tarea);
+            habitacionRepo.save(habitacion);
+        }
     @Transactional
     public void completarTarea(Long tareaId, Long usuarioId) {
         TareaLimpieza tarea = tareaRepo.findById(tareaId)
@@ -73,25 +81,43 @@ public class LimpiezaService {
             .orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
         Habitacion habitacion = tarea.getHabitacion();
         habitacion.setPendienteLimpieza(false);
-        if (habitacion.getEstado() == EstadoHabitacion.OCUPADA) {
-            reservaRepo.findByHabitacionIdAndEstado(habitacion.getId(), EstadoReserva.EN_CURSO)
-                .ifPresent(reserva -> {
-                    long diasRestantes = ChronoUnit.DAYS.between(LocalDate.now(), reserva.getFechaSalida());
-                    if (diasRestantes >= 6) {
-                        habitacion.setProximaLimpieza(LocalDate.now().plusDays(4));
-                    } else {
-                        habitacion.setProximaLimpieza(null);
-                    }
-                });
-        } else if (habitacion.getEstado() == EstadoHabitacion.LIBRE) {
-            habitacion.setProximaLimpieza(LocalDate.now().plusDays(7));
-        } else {
-            habitacion.setProximaLimpieza(null);
-        }
+        habitacion.setProximaLimpieza(recalcularProximaLimpieza(habitacion));
         tarea.setCompletadoPor(usuario);
         tarea.setCompletadaEn(Instant.now());
         tareaRepo.save(tarea);
         habitacionRepo.save(habitacion);
+    }
+    @Transactional
+    public void completarHabitacion(Integer numeroHabitacion, Long usuarioId) {
+        Habitacion habitacion = habitacionRepo.findByNumero(numeroHabitacion)
+            .orElseThrow(() -> new NoSuchElementException("Habitación no encontrada: " + numeroHabitacion));
+        TareaLimpieza tarea = tareaRepo.findByHabitacionIdAndCompletadaEnIsNull(habitacion.getId())
+            .orElseGet(() -> {
+                TareaLimpieza nueva = new TareaLimpieza();
+                nueva.setHabitacion(habitacion);
+                nueva.setTipo(habitacion.getPendienteLimpieza()
+                    ? (habitacion.getEstado() == EstadoHabitacion.OCUPADA
+                        ? TipoTareaLimpieza.REPASO_ESTANCIA : TipoTareaLimpieza.CHECKOUT)
+                    : (habitacion.getEstado() == EstadoHabitacion.OCUPADA
+                        ? TipoTareaLimpieza.REPASO_ESTANCIA : TipoTareaLimpieza.REPASO_VACIA));
+                nueva.setAccionable(true);
+                nueva.setCreadoEn(Instant.now());
+                return tareaRepo.save(nueva);
+            });
+        completarTarea(tarea.getId(), usuarioId);
+    }
+    private LocalDate recalcularProximaLimpieza(Habitacion habitacion) {
+        if (habitacion.getEstado() == EstadoHabitacion.OCUPADA) {
+            return reservaRepo.findByHabitacionIdAndEstado(habitacion.getId(), EstadoReserva.EN_CURSO)
+                .map(reserva -> reserva.getFechaSalida().isAfter(LocalDate.now().plusDays(1))
+                    ? LocalDate.now().plusDays(1)
+                    : null)
+                .orElse(null);
+        }
+        if (habitacion.getEstado() == EstadoHabitacion.LIBRE) {
+            return LocalDate.now().plusDays(4);
+        }
+        return null;
     }
     @Scheduled(cron = "0 0 8 * * *")
     @Transactional

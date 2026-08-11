@@ -14,9 +14,11 @@ import com.dgarcp10.backend.repository.TipoHabitacionRepository;
 public class HabitacionService {
     private final HabitacionRepository habitacionRepo;
     private final TipoHabitacionRepository tipoHabitacionRepo;
-    public HabitacionService(HabitacionRepository habitacionRepo, TipoHabitacionRepository tipoHabitacionRepo) {
+    private final LimpiezaService limpiezaService;
+    public HabitacionService(HabitacionRepository habitacionRepo, TipoHabitacionRepository tipoHabitacionRepo, LimpiezaService limpiezaService) {
         this.habitacionRepo = habitacionRepo;
         this.tipoHabitacionRepo = tipoHabitacionRepo;
+        this.limpiezaService = limpiezaService;
     }
     public List<Habitacion> listarTodos() {
         return habitacionRepo.findAll();
@@ -44,10 +46,21 @@ public class HabitacionService {
         habitacion.setEstado(EstadoHabitacion.LIBRE);
         if (habitacion.getPendienteLimpieza() == null) habitacion.setPendienteLimpieza(false);
         if (habitacion.getAveriada() == null) habitacion.setAveriada(false);
-        return habitacionRepo.save(habitacion);
+        Habitacion guardada = habitacionRepo.save(habitacion);
+        if (Boolean.TRUE.equals(guardada.getPendienteLimpieza())) {
+            limpiezaService.crearTareaPendiente(guardada);
+        }
+        return guardada;
     }
-    public Habitacion actualizar(Long id, Habitacion datos) {
+    public Habitacion actualizar(Long id, Habitacion datos, Long usuarioId) {
         Habitacion existente = obtenerPorId(id);
+        boolean completandoLimpieza = Boolean.TRUE.equals(existente.getPendienteLimpieza())
+            && Boolean.FALSE.equals(datos.getPendienteLimpieza());
+        boolean marcandoPendiente = Boolean.FALSE.equals(existente.getPendienteLimpieza())
+            && Boolean.TRUE.equals(datos.getPendienteLimpieza());
+        if (completandoLimpieza) {
+            limpiezaService.completarHabitacion(existente.getNumero(), usuarioId);
+        }
         if (datos.getNumero() != null && !datos.getNumero().equals(existente.getNumero())) {
             if (habitacionRepo.findByNumero(datos.getNumero()).isPresent()) {
                 throw new IllegalArgumentException("Ya existe una habitación con el número " + datos.getNumero());
@@ -63,7 +76,11 @@ public class HabitacionService {
         if (datos.getPendienteLimpieza() != null) existente.setPendienteLimpieza(datos.getPendienteLimpieza());
         if (datos.getAveriada() != null) existente.setAveriada(datos.getAveriada());
         if (datos.getProximaLimpieza() != null) existente.setProximaLimpieza(datos.getProximaLimpieza());
-        return habitacionRepo.save(existente);
+        Habitacion guardada = habitacionRepo.save(existente);
+        if (marcandoPendiente) {
+            limpiezaService.crearTareaPendiente(guardada);
+        }
+        return guardada;
     }
     public void eliminar(Long id) {
         if (!habitacionRepo.existsById(id)) {
