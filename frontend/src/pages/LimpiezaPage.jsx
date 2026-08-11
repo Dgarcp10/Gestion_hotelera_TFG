@@ -8,18 +8,23 @@ import JefeNav from '../components/JefeNav';
 import Footer from '../components/Footer';
 import '../components/Jefe.css';
 import '../components/Limpieza.css';
+import { Icon } from '@mdi/react';
+import { mdiBroom } from '@mdi/js';
+
 export default function LimpiezaPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [tareas, setTareas] = useState([]);
-  const [previstas, setPrevistas] = useState([]);
+  const [habitaciones, setHabitaciones] = useState([]);
+  const [habitacionesLimpieza, setHabitacionesLimpieza] = useState([]);
   const [modalProgramar, setModalProgramar] = useState(false);
   const [modalConfirmar, setModalConfirmar] = useState(null);
-  const [modalExito, setModalExito] = useState(null);
   const [numeroInput, setNumeroInput] = useState('');
+  const [errorNumero, setErrorNumero] = useState('');
   const cargarDatos = () => {
-    api.get('/api/tareas-limpieza/pendientes').then(res => setTareas(res.data)).catch(() => {});
-    api.get('/api/tareas-limpieza/previstas').then(res => setPrevistas(res.data)).catch(() => {});
+    api.get('/api/tareas-limpieza/pendientes').then(res => setHabitaciones(res.data)).catch(() => {});
+    api.get('/api/habitaciones').then(res =>
+      setHabitacionesLimpieza(res.data.filter(h => h.pendienteLimpieza === false))
+    ).catch(() => {});
   };
   useEffect(() => {
     if (!user) navigate('/login');
@@ -28,41 +33,34 @@ export default function LimpiezaPage() {
     if (user) cargarDatos();
   }, [user]);
   const handleProgramar = async () => {
+    const numero = Number(numeroInput);
+    if (!habitacionesLimpieza.some(h => h.numero === numero)) {
+      setErrorNumero('La habitación no existe o ya tiene una limpieza pendiente');
+      return;
+    }
     try {
-      await api.post('/api/tareas-limpieza/programar', null, { params: { numero: numeroInput } });
+      await api.post('/api/tareas-limpieza/programar', null, { params: { numero } });
       setModalProgramar(false);
       setNumeroInput('');
+      setErrorNumero('');
       cargarDatos();
     } catch (err) {
       alert(err.response?.data?.error || 'Error al programar limpieza');
     }
   };
-  const handleCompletar = async (tareaId) => {
+  const handleLimpiar = async (numero) => {
     try {
-      await api.post(`/api/tareas-limpieza/${tareaId}/completar`);
+      await api.post('/api/tareas-limpieza/limpiar', null, { params: { numero } });
       setModalConfirmar(null);
       cargarDatos();
     } catch (err) {
       alert(err.response?.data?.error || 'Error al completar limpieza');
     }
   };
-  const handleLimpiarAhora = async (numero) => {
-    try {
-      await api.post('/api/tareas-limpieza/programar', null, { params: { numero } });
-      cargarDatos();
-    } catch (err) {
-      alert(err.response?.data?.error || 'Error al programar limpieza');
-    }
-  };
   const estadoLabel = (estado) => {
     if (estado === 'LIBRE') return 'Libre';
     if (estado === 'OCUPADA') return 'Ocupada';
     return 'Bloqueada';
-  };
-  const motivoLabel = (tipo) => {
-    if (tipo === 'CHECKOUT') return 'Post-checkout';
-    if (tipo === 'REPASO_ESTANCIA') return 'Limpieza de estancia';
-    return 'Repaso';
   };
   if (!user) return null;
   return (
@@ -76,75 +74,34 @@ export default function LimpiezaPage() {
             <h1>Limpieza</h1>
             <button className="btn-crear" onClick={() => setModalProgramar(true)}>Añadir limpieza</button>
           </div>
-          <div className="limpieza-section-title">Pendientes ({tareas.length})</div>
+          <div className="limpieza-section-title">Pendientes ({habitaciones.length})</div>
           <div className="habitaciones-table-wrapper">
             <table className="habitaciones-table">
               <thead>
                 <tr>
                   <th>Nº</th>
-                  <th>Tipo</th>
                   <th>Estado</th>
-                  <th>Motivo</th>
-                  <th>Info</th>
+                  <th>Tipo</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                {tareas.length === 0 && (
-                  <tr><td colSpan="6" className="table-empty">No hay habitaciones pendientes de limpieza</td></tr>
+                {habitaciones.length === 0 && (
+                  <tr><td colSpan="4" className="table-empty">No hay habitaciones pendientes de limpieza</td></tr>
                 )}
-                {tareas.map(t => (
-                  <tr key={t.id}>
-                    <td>{t.habitacion?.numero}</td>
-                    <td>{t.habitacion?.tipoHabitacion?.nombre || '-'}</td>
-                    <td>{estadoLabel(t.habitacion?.estado)}</td>
-                    <td>{motivoLabel(t.tipo)}</td>
-                    <td className="limpieza-info">
-                      {t.habitacion?.estado === 'OCUPADA'
-                        ? 'Ocupada'
-                        : 'Libre'}
-                    </td>
-                    <td>
-                      <button
-                        className="checkin-accion"
-                        onClick={() => setModalConfirmar(t)}
-                      >
-                        Limpia
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="limpieza-section-title">Previstas mañana ({previstas.length})</div>
-          <div className="habitaciones-table-wrapper">
-            <table className="habitaciones-table">
-              <thead>
-                <tr>
-                  <th>Nº</th>
-                  <th>Tipo</th>
-                  <th>Estado</th>
-                  <th>Próxima limpieza</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {previstas.length === 0 && (
-                  <tr><td colSpan="5" className="table-empty">No hay limpiezas previstas para mañana</td></tr>
-                )}
-                {previstas.map(h => (
+                {habitaciones.map(h => (
                   <tr key={h.id}>
                     <td>{h.numero}</td>
-                    <td>{h.tipoHabitacion?.nombre || '-'}</td>
                     <td>{estadoLabel(h.estado)}</td>
-                    <td className="limpieza-info">{h.proximaLimpieza}</td>
+                    <td>{h.tipoHabitacion?.nombre || '-'}</td>
                     <td>
                       <button
-                        className="checkin-accion"
-                        onClick={() => handleLimpiarAhora(h.numero)}
+                        className="limpiar-btn"
+                        aria-label={`Limpiar habitación ${h.numero}`}
+                        title="Limpiar"
+                        onClick={() => setModalConfirmar(h)}
                       >
-                        Limpiar ahora
+                        <Icon path={mdiBroom} size={1} />
                       </button>
                     </td>
                   </tr>
@@ -164,10 +121,11 @@ export default function LimpiezaPage() {
               <input
                 type="number"
                 value={numeroInput}
-                onChange={e => setNumeroInput(e.target.value)}
+                onChange={e => { setNumeroInput(e.target.value); setErrorNumero(''); }}
                 required
               />
             </div>
+            {errorNumero && <p className="form-error">{errorNumero}</p>}
             <div className="modal-actions">
               <button className="btn-cancelar" onClick={() => setModalProgramar(false)}>Cancelar</button>
               <button className="btn-guardar" onClick={handleProgramar}>Añadir</button>
@@ -180,24 +138,13 @@ export default function LimpiezaPage() {
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <h2>Confirmar limpieza</h2>
             <p style={{ marginBottom: 24 }}>
-              ¿Marcar habitación <strong>{modalConfirmar.habitacion?.numero}</strong> como limpia?
+              ¿Marcar habitación <strong>{modalConfirmar.numero}</strong> como limpia?
             </p>
             <div className="modal-actions">
               <button className="btn-cancelar" onClick={() => setModalConfirmar(null)}>Cancelar</button>
-              <button className="btn-guardar" onClick={() => handleCompletar(modalConfirmar.id)}>
+              <button className="btn-guardar" onClick={() => handleLimpiar(modalConfirmar.numero)}>
                 Sí, marcar como limpia
               </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {modalExito && (
-        <div className="modal-overlay" onClick={() => setModalExito(null)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <h2>Limpieza completada</h2>
-            <p>Habitación <strong>{modalExito}</strong> marcada como limpia.</p>
-            <div className="modal-actions">
-              <button className="btn-guardar" onClick={() => setModalExito(null)}>Cerrar</button>
             </div>
           </div>
         </div>

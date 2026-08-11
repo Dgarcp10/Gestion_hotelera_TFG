@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
+import { useAuth } from '../contexts/useAuth';
+
 export default function HabitacionModal({ habitacion, onGuardar, onCerrar }) {
   const [tipos, setTipos] = useState([]);
+  const { user } = useAuth();
   const esEdicion = !!habitacion;
   const [form, setForm] = useState({
     numero: habitacion?.numero || '',
@@ -18,6 +21,13 @@ export default function HabitacionModal({ habitacion, onGuardar, onCerrar }) {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    const desmarcando = esEdicion && habitacion.pendienteLimpieza === true && !form.pendienteLimpieza;
+    if (desmarcando) {
+      const ok = window.confirm(
+        `Vas a marcar la habitación ${form.numero} como limpia. Se registrará a ${user?.nombre || user?.username} como la persona que la limpió, con fecha y hora actuales. ¿Continuar?`
+      );
+      if (!ok) return;
+    }
     const payload = {
       numero: parseInt(form.numero, 10),
       tipoHabitacion: { id: parseInt(form.tipoHabitacionId, 10) },

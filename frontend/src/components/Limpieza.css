@@ -60,7 +60,45 @@
   color: var(--text-body);
   padding: 20px 0 12px;
 }
-.limpieza-info {
+
+.limpiar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  background: var(--gold);
+  color: var(--white);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.limpiar-btn:hover {
+  background: var(--gold-hover);
+}
+.limpiar-btn svg {
+  display: block;
+}
+
+.form-error {
+  background: #fef2f2;
+  color: #b91c1c;
   font-size: 13px;
-  color: var(--text-body);
+  padding: 10px 14px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  .habitaciones-table-wrapper { overflow-x: auto; }
+  .habitaciones-table { min-width: 520px; }
+  .habitaciones-table th:first-child,
+  .habitaciones-table td:first-child { position: sticky; left: 0; background: var(--beige); }
+  .habitaciones-table tbody td:first-child { background: var(--white); }
+  .habitaciones-table th:last-child,
+  .habitaciones-table td:last-child { position: sticky; right: 0; background: var(--beige); }
+  .habitaciones-table tbody td:last-child { background: var(--white); }
 }
