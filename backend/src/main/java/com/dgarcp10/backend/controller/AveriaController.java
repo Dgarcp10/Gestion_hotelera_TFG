@@ -71,8 +71,8 @@ public class AveriaController {
             confirmarSinReubicacion, obtenerUsuarioId(auth));
     }
     @PostMapping("/{id}/resolver")
-    public Averia resolver(@PathVariable Long id) {
-        return averiaService.resolver(id);
+    public Averia resolver(@PathVariable Long id, Authentication auth) {
+        return averiaService.resolver(id, obtenerUsuarioId(auth));
     }
     private Long obtenerUsuarioId(Authentication auth) {
         String username = (String) auth.getPrincipal();

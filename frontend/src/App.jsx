@@ -11,6 +11,7 @@ import CheckInPage from './pages/CheckInPage';
 import CheckOutPage from './pages/CheckOutPage';
 import LimpiezaPage from './pages/LimpiezaPage';
 import AveriasPage from './pages/AveriasPage';
+import DashboardJefe from './pages/DashboardJefe';
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
       <Route path="/recepcion/check-out" element={<CheckOutPage />} />
       <Route path="/limpieza" element={<LimpiezaPage />} />
       <Route path="/trabajo/averias" element={<AveriasPage />} />
+      <Route path="/jefe/dashboard" element={<DashboardJefe />} />
       
     </Routes>
   );

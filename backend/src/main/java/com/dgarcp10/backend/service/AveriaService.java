@@ -105,12 +105,16 @@ public class AveriaService {
         return averiaRepo.save(averia);
     }
     @Transactional
-    public Averia resolver(Long id) {
+    public Averia resolver(Long id, Long usuarioId) {
         Averia averia = obtener(id);
         if (averia.getEstado() == EstadoAveria.RESUELTA) {
             throw new IllegalStateException("La avería ya está resuelta");
         }
+        Usuario resueltoPor = usuarioRepo.findById(usuarioId)
+            .orElseThrow(() -> new NoSuchElementException("Usuario no encontrado: " + usuarioId));
         averia.setEstado(EstadoAveria.RESUELTA);
+        averia.setResueltaEn(Instant.now());
+        averia.setResueltaPor(resueltoPor);
         averia.getHabitacion().setAveriada(false);
         habitacionRepo.save(averia.getHabitacion());
         if (averia.getBloqueo() != null && averia.getBloqueo().getEstado() == EstadoBloqueo.ACTIVO) {
