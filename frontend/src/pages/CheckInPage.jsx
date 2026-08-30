@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/useAuth';
+import { useToast } from '../contexts/useToast';
 import api from '../services/api';
 import ProtectedHeader from '../components/ProtectedHeader';
 import RecepcionNav from '../components/RecepcionNav';
@@ -10,6 +11,7 @@ import '../components/Jefe.css';
 import '../components/Recepcion.css';
 export default function CheckInPage() {
   const { user } = useAuth();
+  const toast = useToast();
   const navigate = useNavigate();
   const [reservas, setReservas] = useState([]);
   const [busqueda, setBusqueda] = useState('');
@@ -35,7 +37,7 @@ export default function CheckInPage() {
         reservaId: id,
       });
     } catch (err) {
-      alert(err.response?.data?.error || 'Error al hacer check-in');
+      toast.error(err.response?.data?.error || 'Error al hacer check-in');
     }
   };
   const filtrarPorUsername = (username) => {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/useAuth';
+import { useToast } from '../contexts/useToast';
 import api from '../services/api';
 import ProtectedHeader from '../components/ProtectedHeader';
 import JefeNav from '../components/JefeNav';
@@ -9,6 +10,7 @@ import EmpleadoModal from '../components/EmpleadoModal';
 import '../components/Jefe.css';
 export default function GestionEmpleadosPage() {
   const { user } = useAuth();
+  const toast = useToast();
   const navigate = useNavigate();
   const [usuarios, setUsuarios] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -31,7 +33,7 @@ export default function GestionEmpleadosPage() {
         .then(r => setUsuarios(r.data))
         .catch(err => console.error('Error al cargar usuarios', err));
     } catch (err) {
-      alert(err.response?.data?.error || 'Error al crear empleado');
+      toast.error(err.response?.data?.error || 'Error al crear empleado');
     }
   };
   const handleCerrarModal = () => {

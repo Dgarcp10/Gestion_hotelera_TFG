@@ -1,6 +1,8 @@
 package com.dgarcp10.backend.service;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -8,6 +10,7 @@ import com.dgarcp10.backend.model.EstadoHabitacion;
 import com.dgarcp10.backend.model.Habitacion;
 import com.dgarcp10.backend.model.TipoHabitacion;
 import com.dgarcp10.backend.repository.HabitacionRepository;
+import com.dgarcp10.backend.repository.TareaLimpiezaRepository;
 import com.dgarcp10.backend.repository.TipoHabitacionRepository;
 
 @Service
@@ -15,20 +18,28 @@ public class HabitacionService {
     private final HabitacionRepository habitacionRepo;
     private final TipoHabitacionRepository tipoHabitacionRepo;
     private final LimpiezaService limpiezaService;
-    public HabitacionService(HabitacionRepository habitacionRepo, TipoHabitacionRepository tipoHabitacionRepo, LimpiezaService limpiezaService) {
+    private final TareaLimpiezaRepository tareaLimpiezaRepo;
+    public HabitacionService(HabitacionRepository habitacionRepo, TipoHabitacionRepository tipoHabitacionRepo, LimpiezaService limpiezaService, TareaLimpiezaRepository tareaLimpiezaRepo) {
         this.habitacionRepo = habitacionRepo;
         this.tipoHabitacionRepo = tipoHabitacionRepo;
         this.limpiezaService = limpiezaService;
+        this.tareaLimpiezaRepo = tareaLimpiezaRepo;
     }
     public List<Habitacion> listarTodos() {
-        return habitacionRepo.findAll();
+        List<Habitacion> habitaciones = habitacionRepo.findAll();
+        aplicarPendienteLimpiezaDerivado(habitaciones);
+        return habitaciones;
     }
     public List<Habitacion> listarPorTipo(Long tipoId) {
-        return habitacionRepo.findByTipoHabitacionId(tipoId);
+        List<Habitacion> habitaciones = habitacionRepo.findByTipoHabitacionId(tipoId);
+        aplicarPendienteLimpiezaDerivado(habitaciones);
+        return habitaciones;
     }
     public Habitacion obtenerPorId(Long id) {
-        return habitacionRepo.findById(id)
+        Habitacion habitacion = habitacionRepo.findById(id)
             .orElseThrow(() -> new NoSuchElementException("Habitación no encontrada: " + id));
+        aplicarPendienteLimpiezaDerivado(List.of(habitacion));
+        return habitacion;
     }
     public Habitacion crear(Habitacion habitacion) {
         if (habitacion.getNumero().toString().isBlank()) {
@@ -87,5 +98,14 @@ public class HabitacionService {
             throw new NoSuchElementException("Habitación no encontrada: " + id);
         }
         habitacionRepo.deleteById(id);
+    }
+    private void aplicarPendienteLimpiezaDerivado(List<Habitacion> habitaciones) {
+        if (habitaciones.isEmpty()) return;
+        Set<Long> tareaIds = tareaLimpiezaRepo.findIdsHabitacionConTareaPendiente();
+        LocalDate hoy = LocalDate.now();
+        for (Habitacion h : habitaciones) {
+            h.setPendienteLimpieza(tareaIds.contains(h.getId())
+                || (h.getProximaLimpieza() != null && !h.getProximaLimpieza().isAfter(hoy)));
+        }
     }
 }

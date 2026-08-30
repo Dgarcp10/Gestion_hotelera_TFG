@@ -144,6 +144,8 @@ public class LimpiezaService {
             tarea.setAccionable(true);
             tarea.setCreadoEn(Instant.now());
             tareaRepo.save(tarea);
+             h.setPendienteLimpieza(true);
+            habitacionRepo.save(h);
         }
     }
 }

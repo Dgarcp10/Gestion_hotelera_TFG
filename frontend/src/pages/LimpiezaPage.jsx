@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/useAuth';
+import { useToast } from '../contexts/useToast';
 import api from '../services/api';
 import ProtectedHeader from '../components/ProtectedHeader';
 import LimpiezaNav from '../components/LimpiezaNav';
@@ -13,6 +14,7 @@ import { mdiBroom } from '@mdi/js';
 
 export default function LimpiezaPage() {
   const { user } = useAuth();
+  const toast = useToast();
   const navigate = useNavigate();
   const [habitaciones, setHabitaciones] = useState([]);
   const [habitacionesLimpieza, setHabitacionesLimpieza] = useState([]);
@@ -45,7 +47,7 @@ export default function LimpiezaPage() {
       setErrorNumero('');
       cargarDatos();
     } catch (err) {
-      alert(err.response?.data?.error || 'Error al programar limpieza');
+      toast.error(err.response?.data?.error || 'Error al programar limpieza');
     }
   };
   const handleLimpiar = async (numero) => {
@@ -54,7 +56,7 @@ export default function LimpiezaPage() {
       setModalConfirmar(null);
       cargarDatos();
     } catch (err) {
-      alert(err.response?.data?.error || 'Error al completar limpieza');
+      toast.error(err.response?.data?.error || 'Error al completar limpieza');
     }
   };
   const estadoLabel = (estado) => {

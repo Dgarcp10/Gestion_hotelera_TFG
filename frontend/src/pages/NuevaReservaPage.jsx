@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/useAuth';
+import { useToast } from '../contexts/useToast';
 import api from '../services/api';
 import ProtectedHeader from '../components/ProtectedHeader';
 import UserNav from '../components/UserNav';
@@ -9,6 +10,7 @@ import '../components/Jefe.css';
 import '../components/User.css';
 export default function NuevaReservaPage() {
   const { user } = useAuth();
+  const toast = useToast();
   const navigate = useNavigate();
   const [tipos, setTipos] = useState([]);
   const [tipoId, setTipoId] = useState('');
@@ -48,7 +50,7 @@ export default function NuevaReservaPage() {
       });
       navigate('/mis-reservas');
     } catch (err) {
-      alert(err.response?.data?.error || 'Error al crear la reserva');
+      toast.error(err.response?.data?.error || 'Error al crear la reserva');
     } finally {
       setEnviando(false);
     }

@@ -2,10 +2,9 @@ import { Link, useLocation } from 'react-router-dom';
 import NotificacionesCampana from './NotificacionesCampana';
 import './Limpieza.css';
 const links = [
-  { to: '/limpieza', label: 'Limpieza' },
   { to: '/trabajo/averias', label: 'Averías' },
 ];
-export default function LimpiezaNav() {
+export default function MantenimientoNav() {
   const location = useLocation();
   return (
     <nav className="limpieza-nav">

@@ -5,6 +5,7 @@ import ProtectedHeader from '../components/ProtectedHeader';
 import JefeNav from '../components/JefeNav';
 import RecepcionNav from '../components/RecepcionNav';
 import LimpiezaNav from '../components/LimpiezaNav';
+import MantenimientoNav from '../components/MantenimientoNav';
 import UserNav from '../components/UserNav';
 import Footer from '../components/Footer';
 import './Dashboard.css';
@@ -29,6 +30,7 @@ export default function Dashboard() {
         {user?.rol === 'JEFE' && <JefeNav />}
         {user?.rol === 'RECEPCION' && <RecepcionNav />}
         {user?.rol === 'LIMPIEZA' && <LimpiezaNav />}
+        {user?.rol === 'MANTENIMIENTO' && <MantenimientoNav />}
         {user?.rol === 'USUARIO' && <UserNav />}
         <div className="dashboard-card">
           <h1>Bienvenido, {user.username}</h1>

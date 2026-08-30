@@ -12,6 +12,7 @@ export default function HabitacionModal({ habitacion, onGuardar, onCerrar }) {
     pendienteLimpieza: habitacion?.pendienteLimpieza || false,
     averiada: habitacion?.averiada || false,
   });
+  const [confirmandoLimpieza, setConfirmandoLimpieza] = useState(false);
   useEffect(() => {
     api.get('/api/tipos-habitacion').then((res) => setTipos(res.data)).catch(() => {});
   }, []);
@@ -19,23 +20,25 @@ export default function HabitacionModal({ habitacion, onGuardar, onCerrar }) {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const desmarcando = esEdicion && habitacion.pendienteLimpieza === true && !form.pendienteLimpieza;
-    if (desmarcando) {
-      const ok = window.confirm(
-        `Vas a marcar la habitación ${form.numero} como limpia. Se registrará a ${user?.nombre || user?.username} como la persona que la limpió, con fecha y hora actuales. ¿Continuar?`
-      );
-      if (!ok) return;
-    }
-    const payload = {
-      numero: parseInt(form.numero, 10),
-      tipoHabitacion: { id: parseInt(form.tipoHabitacionId, 10) },
-      pendienteLimpieza: form.pendienteLimpieza,
-      averiada: form.averiada,
-    };
-    onGuardar(payload);
+  const ejecutarGuardar = () => {
+  const payload = {
+    numero: parseInt(form.numero, 10),
+    tipoHabitacion: { id: parseInt(form.tipoHabitacionId, 10) },
+    pendienteLimpieza: form.pendienteLimpieza,
+    averiada: form.averiada,
   };
+  setConfirmandoLimpieza(false);
+  onGuardar(payload);
+};
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const desmarcando = esEdicion && habitacion.pendienteLimpieza === true && !form.pendienteLimpieza;
+  if (desmarcando) {
+    setConfirmandoLimpieza(true);
+    return;
+  }
+  ejecutarGuardar();
+};
   return (
     <div className="modal-overlay" onClick={onCerrar}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -71,6 +74,18 @@ export default function HabitacionModal({ habitacion, onGuardar, onCerrar }) {
             <button type="submit" className="btn-guardar">{esEdicion ? 'Guardar cambios' : 'Crear'}</button>
           </div>
         </form>
+        {confirmandoLimpieza && (
+          <div className="confirm-box">
+            <p>
+              Vas a marcar la habitación {form.numero} como limpia. Se registrará a{' '}
+              {user?.nombre || user?.username} como la persona que la limpió, con fecha y hora actuales.
+            </p>
+            <div className="modal-actions">
+              <button className="btn-cancelar" onClick={() => setConfirmandoLimpieza(false)}>Cancelar</button>
+              <button className="btn-guardar" onClick={ejecutarGuardar}>Sí, marcar como limpia</button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

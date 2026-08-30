@@ -10,6 +10,7 @@ import GestionEmpleadosPage from './pages/GestionEmpleadosPage';
 import CheckInPage from './pages/CheckInPage';
 import CheckOutPage from './pages/CheckOutPage';
 import LimpiezaPage from './pages/LimpiezaPage';
+import AveriasPage from './pages/AveriasPage';
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
       <Route path="/recepcion/check-in" element={<CheckInPage />} />
       <Route path="/recepcion/check-out" element={<CheckOutPage />} />
       <Route path="/limpieza" element={<LimpiezaPage />} />
+      <Route path="/trabajo/averias" element={<AveriasPage />} />
       
     </Routes>
   );

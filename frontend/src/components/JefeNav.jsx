@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import NotificacionesCampana from './NotificacionesCampana';
 import './Jefe.css';
 const links = [
   { to: '/jefe/habitaciones', label: 'Habitaciones' },
@@ -6,6 +7,7 @@ const links = [
   { to: '/recepcion/check-in', label: 'Check-in' },
   { to: '/recepcion/check-out', label: 'Check-out' },
   { to: '/limpieza', label: 'Limpieza' },
+  { to: '/trabajo/averias', label: 'Averías' },
 ];
 export default function JefeNav() {
   const location = useLocation();
@@ -20,6 +22,7 @@ export default function JefeNav() {
           {link.label}
         </Link>
       ))}
+      <NotificacionesCampana />
     </nav>
   );
 }
