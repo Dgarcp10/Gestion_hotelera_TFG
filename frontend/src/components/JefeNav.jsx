@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import NotificacionesCampana from './NotificacionesCampana';
 import './Jefe.css';
 const links = [
+  { to: '/jefe/dashboard', label: 'Dashboard' },
   { to: '/jefe/habitaciones', label: 'Habitaciones' },
   { to: '/jefe/empleados', label: 'Empleados' },
   { to: '/recepcion/check-in', label: 'Check-in' },
