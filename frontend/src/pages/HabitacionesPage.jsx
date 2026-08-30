@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/useAuth';
+import { useToast } from '../contexts/useToast';
+import ConfirmDialog from '../components/ConfirmDialog';
 import api from '../services/api';
 import ProtectedHeader from '../components/ProtectedHeader';
 import JefeNav from '../components/JefeNav';
@@ -10,6 +12,8 @@ import '../components/Jefe.css';
 
 export default function HabitacionesPage() {
   const { user } = useAuth();
+  const toast = useToast();
+  const [eliminar, setEliminar] = useState(null);
   const navigate = useNavigate();
   const [habitaciones, setHabitaciones] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -33,16 +37,15 @@ export default function HabitacionesPage() {
     setModalOpen(true);
   };
   const handleEliminar = async (id) => {
-    if (!confirm('¿Eliminar esta habitación?')) return;
-    try {
-      await api.delete(`/api/habitaciones/${id}`);
-      api.get('/api/habitaciones')
-        .then(res => setHabitaciones(res.data))
-        .catch(err => console.error('Error al cargar habitaciones', err));
-    } catch (err) {
-      alert(err.response?.data?.error || 'Error al eliminar');
-    }
-  };
+  try {
+    await api.delete(`/api/habitaciones/${id}`);
+    api.get('/api/habitaciones')
+      .then(res => setHabitaciones(res.data))
+      .catch(err => console.error('Error al cargar habitaciones', err));
+  } catch (err) {
+    toast.error(err.response?.data?.error || 'Error al eliminar');
+  }
+};
   const handleGuardar = async (data) => {
     try {
       if (editando) {
@@ -55,7 +58,7 @@ export default function HabitacionesPage() {
         .then(res => setHabitaciones(res.data))
         .catch(err => console.error('Error al cargar habitaciones', err));
     } catch (err) {
-      alert(err.response?.data?.error || 'Error al guardar');
+      toast.error(err.response?.data?.error || 'Error al guardar');
     }
   };
   const estadoClass = (estado) => {
@@ -99,7 +102,7 @@ export default function HabitacionesPage() {
                     <td>{h.averiada ? 'Sí' : 'No'}</td>
                     <td className="acciones-cell">
                       <button className="btn-accion btn-editar" onClick={() => abrirEditar(h)}>Editar</button>
-                      <button className="btn-accion btn-eliminar" onClick={() => handleEliminar(h.id)}>Eliminar</button>
+                      <button className="btn-accion btn-eliminar" onClick={() => setEliminar(h.id)}>Eliminar</button>
                     </td>
                   </tr>
                 ))}
@@ -115,6 +118,15 @@ export default function HabitacionesPage() {
           habitacion={editando}
           onGuardar={handleGuardar}
           onCerrar={() => setModalOpen(false)}
+        />
+      )}
+      {eliminar !== null && (
+        <ConfirmDialog
+          title="Eliminar habitación"
+          message="¿Eliminar esta habitación?"
+          confirmLabel="Eliminar"
+          onConfirm={() => { handleEliminar(eliminar); setEliminar(null); }}
+          onCancel={() => setEliminar(null)}
         />
       )}
     </>

@@ -1,8 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
+import NotificacionesCampana from './NotificacionesCampana';
 import './Recepcion.css';
 const links = [
   { to: '/recepcion/check-in', label: 'Check-in' },
   { to: '/recepcion/check-out', label: 'Check-out' },
+  { to: '/trabajo/averias', label: 'Averías' },
 ];
 export default function RecepcionNav() {
   const location = useLocation();
@@ -17,6 +19,7 @@ export default function RecepcionNav() {
           {link.label}
         </Link>
       ))}
+      <NotificacionesCampana />
     </nav>
   );
 }

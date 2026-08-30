@@ -17,6 +17,7 @@ import com.dgarcp10.backend.model.TareaLimpieza;
 import com.dgarcp10.backend.model.TipoHabitacion;
 import com.dgarcp10.backend.model.TipoTareaLimpieza;
 import com.dgarcp10.backend.model.Usuario;
+import com.dgarcp10.backend.repository.BloqueoHabitacionRepository;
 import com.dgarcp10.backend.repository.HabitacionRepository;
 import com.dgarcp10.backend.repository.ReservaRepository;
 import com.dgarcp10.backend.repository.TareaLimpiezaRepository;
@@ -30,16 +31,19 @@ public class ReservaService {
     private final TipoHabitacionRepository tipoHabitacionRepo;
     private final HabitacionRepository habitacionRepo;
     private final TareaLimpiezaRepository tareaLimpiezaRepo;
+    private final BloqueoHabitacionRepository bloqueoRepo;
     public ReservaService(ReservaRepository reservaRepo,
                           UsuarioRepository usuarioRepo,
                           TipoHabitacionRepository tipoHabitacionRepo,
                           HabitacionRepository habitacionRepo,
-                          TareaLimpiezaRepository tareaLimpiezaRepo) {
+                          TareaLimpiezaRepository tareaLimpiezaRepo,
+                          BloqueoHabitacionRepository bloqueoRepo) {
         this.reservaRepo = reservaRepo;
         this.usuarioRepo = usuarioRepo;
         this.tipoHabitacionRepo = tipoHabitacionRepo;
         this.habitacionRepo = habitacionRepo;
         this.tareaLimpiezaRepo = tareaLimpiezaRepo;
+        this.bloqueoRepo = bloqueoRepo;
     }
     public List<Reserva> misReservas(Long usuarioId) {
         return reservaRepo.findByUsuarioIdOrderByCreadoEnDesc(usuarioId);
@@ -63,7 +67,8 @@ public class ReservaService {
             .orElseThrow(() -> new NoSuchElementException("Tipo de habitación no encontrado"));
         long totalHabitaciones = habitacionRepo.countByTipoHabitacionId(tipoHabitacionId);
         long reservadas = reservaRepo.countReservasActivasEnRango(tipoHabitacionId, fechaEntrada, fechaSalida);
-        if (reservadas >= totalHabitaciones) {
+        long bloqueadas = bloqueoRepo.countActivosEnRango(tipoHabitacionId, fechaEntrada, fechaSalida);
+        if (reservadas + bloqueadas >= totalHabitaciones) {
             throw new IllegalStateException("No hay habitaciones disponibles para este tipo en las fechas seleccionadas");
         }
         long noches = ChronoUnit.DAYS.between(fechaEntrada, fechaSalida);
@@ -109,7 +114,11 @@ public class ReservaService {
         }
         Habitacion habitacion = reserva.getHabitacion();
         if (habitacion != null) {
-            habitacion.setEstado(EstadoHabitacion.LIBRE);
+            habitacion.setEstado(
+                    bloqueoRepo.existsActivoSolapado(habitacion.getId(), LocalDate.now(), LocalDate.now().plusDays(1))
+                    ? EstadoHabitacion.BLOQUEADA
+                    : EstadoHabitacion.LIBRE
+            );
             habitacion.setPendienteLimpieza(true);
             if (tareaLimpiezaRepo.findByHabitacionIdAndCompletadaEnIsNull(habitacion.getId()).isEmpty()) {
                 TareaLimpieza tarea = new TareaLimpieza();
