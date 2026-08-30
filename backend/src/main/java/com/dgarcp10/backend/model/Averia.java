@@ -48,6 +48,13 @@ public class Averia {
     @Column(name = "creado_en", nullable = false)
     private Instant creadoEn;
 
+    @Column(name = "resuelta_en")
+    private Instant resueltaEn;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "resuelta_por")
+    private Usuario resueltaPor;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Habitacion getHabitacion() { return habitacion; }
@@ -64,4 +71,8 @@ public class Averia {
     public void setBloqueo(BloqueoHabitacion bloqueo) { this.bloqueo = bloqueo; }
     public Instant getCreadoEn() { return creadoEn; }
     public void setCreadoEn(Instant creadoEn) { this.creadoEn = creadoEn; }
+    public Instant getResueltaEn() { return resueltaEn; }
+    public void setResueltaEn(Instant resueltaEn) { this.resueltaEn = resueltaEn; }
+    public Usuario getResueltaPor() { return resueltaPor; }
+    public void setResueltaPor(Usuario resueltaPor) { this.resueltaPor = resueltaPor; }
 }

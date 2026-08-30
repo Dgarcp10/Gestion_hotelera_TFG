@@ -102,8 +102,10 @@ class AveriaServiceTest {
         Habitacion hab = nuevaHabitacion(104, tipo, EstadoHabitacion.LIBRE);
         Usuario trab = nuevoUsuario(RolUsuario.MANTENIMIENTO);
         Averia a = averiaService.crear(hab.getId(), GravedadAveria.GRAVE, "Fontanería", trab.getId());
-        Averia resuelta = averiaService.resolver(a.getId());
+        Averia resuelta = averiaService.resolver(a.getId(), trab.getId());
         assertEquals(EstadoAveria.RESUELTA, resuelta.getEstado());
+        assertNotNull(resuelta.getResueltaEn());
+        assertEquals(trab.getId(), resuelta.getResueltaPor().getId());
         assertFalse(hab.getAveriada());
         assertEquals(EstadoHabitacion.LIBRE, hab.getEstado());
         assertEquals(EstadoBloqueo.CANCELADO, resuelta.getBloqueo().getEstado());
@@ -114,8 +116,8 @@ class AveriaServiceTest {
         Habitacion hab = nuevaHabitacion(105, tipo, EstadoHabitacion.LIBRE);
         Usuario trab = nuevoUsuario(RolUsuario.JEFE);
         Averia a = averiaService.crear(hab.getId(), GravedadAveria.LEVE, "Luz", trab.getId());
-        averiaService.resolver(a.getId());
-        assertThrows(IllegalStateException.class, () -> averiaService.resolver(a.getId()));
+        averiaService.resolver(a.getId(), trab.getId());
+        assertThrows(IllegalStateException.class, () -> averiaService.resolver(a.getId(), trab.getId()));
     }
     @Test
     void actualizar_leveAGrave_creaBloqueoYbloquea() {
