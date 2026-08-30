@@ -172,10 +172,11 @@ class BloqueoServiceTest {
         Habitacion hab = nuevaHabitacion(213, doble, EstadoHabitacion.LIBRE, false);
         Usuario jefe = nuevoUsuario(RolUsuario.JEFE);
         reservaService.crearReserva(nuevoUsuario(RolUsuario.USUARIO).getId(),
-            doble.getId(), HOY.plusDays(1), HOY.plusDays(3));
+            doble.getId(), HOY.plusDays(1), HOY.plusDays(3), "1234567890123456", "12/30", "123");
         bloqueoService.crear(hab.getId(), HOY.plusDays(1), HOY.plusDays(3), "Obras", false, jefe);
         assertThrows(IllegalStateException.class, () -> reservaService.crearReserva(
-            nuevoUsuario(RolUsuario.USUARIO).getId(), doble.getId(), HOY.plusDays(1), HOY.plusDays(3)));
+            nuevoUsuario(RolUsuario.USUARIO).getId(), doble.getId(), HOY.plusDays(1), HOY.plusDays(3),
+            "1234567890123456", "12/30", "123"));
     }
     @Test
     void huespedEntraHoy_averiaGravePorDefecto_reubicaYbloquea() {

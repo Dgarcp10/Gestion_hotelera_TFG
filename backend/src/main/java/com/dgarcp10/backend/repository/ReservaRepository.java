@@ -26,4 +26,14 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
            EstadoReserva estado, LocalDate fecha);
     Optional<Reserva> findByHabitacionIdAndEstado(Long habitacionId, EstadoReserva estado);
     List<Reserva> findByHabitacionIdAndEstadoIn(Long habitacionId, List<EstadoReserva> estados);
+    @Query("SELECT COUNT(r) FROM Reserva r " +
+           "WHERE r.tipoHabitacion.id = :tipoId " +
+           "AND r.id <> :reservaId " +
+           "AND r.estado <> 'CANCELADA' " +
+           "AND r.fechaEntrada < :salida " +
+           "AND r.fechaSalida > :entrada")
+    long countReservasActivasEnRangoExcluyendo(@Param("tipoId") Long tipoId,
+                                                 @Param("reservaId") Long reservaId,
+                                                 @Param("entrada") LocalDate entrada,
+                                                 @Param("salida") LocalDate salida);
 }

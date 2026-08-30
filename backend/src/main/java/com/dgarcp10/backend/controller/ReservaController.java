@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dgarcp10.backend.model.Reserva;
 import com.dgarcp10.backend.repository.UsuarioRepository;
+import com.dgarcp10.backend.service.InfoCancelacion;
 import com.dgarcp10.backend.service.ReservaService;
 @RestController
 @RequestMapping("/api/reservas")
@@ -31,9 +33,13 @@ public class ReservaController {
     public Reserva crear(@RequestParam Long tipoHabitacionId,
                          @RequestParam LocalDate fechaEntrada,
                          @RequestParam LocalDate fechaSalida,
+                         @RequestParam String numeroTarjeta,
+                         @RequestParam String caducidad,
+                         @RequestParam String cvv,
                          Authentication auth) {
         Long usuarioId = obtenerUsuarioId(auth);
-        return reservaService.crearReserva(usuarioId, tipoHabitacionId, fechaEntrada, fechaSalida);
+        return reservaService.crearReserva(usuarioId, tipoHabitacionId, fechaEntrada, fechaSalida,
+            numeroTarjeta, caducidad, cvv);
     }
     @GetMapping("/mis-reservas")
     public List<Reserva> misReservas(Authentication auth) {
@@ -69,5 +75,25 @@ public class ReservaController {
         return usuarioRepo.findByUsername(username)
             .orElseThrow()
             .getId();
+    }
+    @GetMapping("/{id}/info-cancelacion")
+    public InfoCancelacion infoCancelacion(@PathVariable Long id, Authentication auth) {
+        return reservaService.infoCancelacion(id, obtenerUsuarioId(auth));
+    }
+    @PostMapping("/{id}/cancelar")
+    public Reserva cancelar(@PathVariable Long id, Authentication auth) {
+        return reservaService.cancelar(id, obtenerUsuarioId(auth));
+    }
+    @PutMapping("/{id}")
+    public Reserva modificar(@PathVariable Long id,
+                            @RequestParam Long tipoHabitacionId,
+                            @RequestParam LocalDate fechaEntrada,
+                            @RequestParam LocalDate fechaSalida,
+                            @RequestParam(required = false) String numeroTarjeta,
+                            @RequestParam(required = false) String caducidad,
+                            @RequestParam(required = false) String cvv,
+                            Authentication auth) {
+        return reservaService.modificar(id, obtenerUsuarioId(auth), tipoHabitacionId,
+            fechaEntrada, fechaSalida, numeroTarjeta, caducidad, cvv);
     }
 }

@@ -14,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -55,6 +56,9 @@ public class Reserva {
     @Column(name = "creado_en", nullable = false)
     private Instant creadoEn;
 
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "reserva")
+    private Pago pago;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Usuario getUsuario() { return usuario; }
@@ -75,4 +79,6 @@ public class Reserva {
     public void setEstado(EstadoReserva estado) { this.estado = estado; }
     public Instant getCreadoEn() { return creadoEn; }
     public void setCreadoEn(Instant creadoEn) { this.creadoEn = creadoEn; }
+    public Pago getPago() { return pago; }
+    public void setPago(Pago pago) { this.pago = pago; }
 }
