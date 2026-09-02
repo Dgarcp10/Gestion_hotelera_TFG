@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import './Headers.css';
 
-const LOGO_URL = import.meta.env.VITE_LOGO_URL || null;
+const LOGO_URL = import.meta.env.VITE_LOGO_URL || '/Logo.jpg';
 
 export default function PublicHeader() {
   const { pathname } = useLocation();

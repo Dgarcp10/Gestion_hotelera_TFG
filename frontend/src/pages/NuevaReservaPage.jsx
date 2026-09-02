@@ -8,12 +8,7 @@ import UserNav from '../components/UserNav';
 import Footer from '../components/Footer';
 import '../components/Jefe.css';
 import '../components/User.css';
-
-const formatearTarjeta = (digitos) => digitos.replace(/(\d{4})(?=\d)/g, '$1 ');
-const formatearCaducidad = (digitos) => {
-  if (digitos.length <= 2) return digitos;
-  return `${digitos.slice(0, 2)}/${digitos.slice(2)}`;
-};
+import { formatearTarjeta, formatearCaducidad } from '../utils/formatters';
 
 export default function NuevaReservaPage() {
   const { user } = useAuth();

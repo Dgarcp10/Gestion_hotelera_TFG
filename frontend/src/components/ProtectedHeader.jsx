@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/useAuth';
 import './Headers.css';
-const LOGO_URL = import.meta.env.VITE_LOGO_URL || null;
+const LOGO_URL = import.meta.env.VITE_LOGO_URL || '/Logo.jpg';
 export default function ProtectedHeader() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
